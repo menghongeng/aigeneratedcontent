@@ -191,6 +191,21 @@ print(f"\nFinal test results ({final_name}, threshold {threshold:.2f}):")
 print(confusion_matrix(y_test, final_pred))
 print(classification_report(y_test, final_pred, target_names=["human (0)", "AI (1)"]))
 
+cm = confusion_matrix(y_test, final_pred)
+
+plt.imshow(cm)
+plt.xticks([0, 1], ["Human", "AI"])
+plt.yticks([0, 1], ["Human", "AI"])
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.title("Final Random Forest Confusion Matrix")
+
+for i in range(2):
+    for j in range(2):
+        plt.text(j, i, cm[i, j], ha="center", va="center")
+
+save_plot("confusion_matrix_final.png")
+
 # accuracy per source: if one source is far better than the others, the model may be
 # recognising the source rather than AI-ness (same check as the baseline in data processing)
 print("Accuracy per source:")
