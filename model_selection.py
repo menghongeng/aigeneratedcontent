@@ -35,7 +35,7 @@ LABEL_COL = "is_ai_generated"            # 1 = AI, 0 = human (same as the data p
 SOURCE_COL = "source"                    # only used to check results per source, never a model feature
 RANDOM_STATE = 42                        # same as data processing so results are repeatable
 PRECISION_TARGET = 0.90                  # we care most about NOT falsely accusing a human of using AI
-N_CLUSTERS = 3                           # picked using the silhouette table printed in the clustering section
+N_CLUSTERS = 4                           # picked using the silhouette table printed in the clustering section
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
