@@ -211,6 +211,74 @@ plt.xlabel("importance")
 plt.title("Random forest feature importances")
 save_plot("feature_importance.png")
 
+#----------------------------------------------------------------------------
+# BEYOND-THE-UNIT MODEL 1: ISOLATION FOREST
+#----------------------------------------------------------------------------
+
+# Trained only to use human-written text.
+# Anything that is somewhat different during the test will be flagged.
+# No scaling is needed here since tree-based splits dont care about feature scale.
+
+from sklearn.ensemble import IsolationForest
+
+human_train = X_train[y_train == 0]
+
+iso = IsolationForest(contamination="auto", random_state=RANDOM_STATE)
+iso.fit(human_train)
+
+# IsolationForest outputs 1 = normal (human-like), -1 = anomaly (AI-like).
+# Flip it to match our usual 0/1 labels so the same metric functions work.
+iso_pred = np.where(iso.predict(X_test) == -1, 1, 0)
+
+print("\n--- Isolation Forest (beyond-the-unit, trained on human text only) ---")
+print(confusion_matrix(y_test, iso_pred))
+print(classification_report(y_test, iso_pred, target_names=["human (0)", "AI (1)"]))
+
+
+#----------------------------------------------------------------------------
+# BEYOND-THE-UNIT MODEL 2: NAIVE BAYES
+#----------------------------------------------------------------------------
+
+# Assumes every feature is independent of the others given the class so that it is not strictly true here, since longer words and lower type-token ratio likely go together.
+# This simplification makes it fast with nothing to tune, and gives a probabilistic contrast to the linear and tree models.
+
+from sklearn.naive_bayes import GaussianNB
+
+nb = make_pipeline(GaussianNB())
+nb.fit(X_train, y_train)
+fitted["naive_bayes"] = nb
+
+nb_pred = nb.predict(X_test)
+
+print("\n--- Naive Bayes (beyond-the-unit) ---")
+print(confusion_matrix(y_test, nb_pred))
+print(classification_report(y_test, nb_pred, target_names=["human (0)", "AI (1)"]))
+
+#----------------------------------------------------------------------------
+# COMPARE ALL MODELS SIDE BY SIDE
+#----------------------------------------------------------------------------
+
+log_pred = fitted["logistic"].predict(X_test)
+forest_pred = fitted["forest"].predict(X_test)
+
+print(f"\n{'model':<20} {'precision':>10} {'recall':>8} {'f1':>6}")
+print(f"{'logistic (taught)':<20} "
+      f"{precision_score(y_test, log_pred, zero_division=0):>10.3f} "
+      f"{recall_score(y_test, log_pred):>8.3f} "
+      f"{f1_score(y_test, log_pred):>6.3f}")
+print(f"{'forest (taught)':<20} "
+      f"{precision_score(y_test, forest_pred, zero_division=0):>10.3f} "
+      f"{recall_score(y_test, forest_pred):>8.3f} "
+      f"{f1_score(y_test, forest_pred):>6.3f}")
+print(f"{'isolation forest':<20} "
+      f"{precision_score(y_test, iso_pred, zero_division=0):>10.3f} "
+      f"{recall_score(y_test, iso_pred):>8.3f} "
+      f"{f1_score(y_test, iso_pred):>6.3f}")
+print(f"{'naive bayes':<20} "
+      f"{precision_score(y_test, nb_pred, zero_division=0):>10.3f} "
+      f"{recall_score(y_test, nb_pred):>8.3f} "
+      f"{f1_score(y_test, nb_pred):>6.3f}")
+
 
 #----------------------------------------------------------------------------
 # CLUSTERING - KMeans inside the AI class only, WITHOUT using the label
@@ -220,7 +288,9 @@ save_plot("feature_importance.png")
 # clustering is unsupervised so train + test are pooled
 all_df = pd.concat([train_df, test_df], ignore_index=True)
 ai_df = all_df[all_df[LABEL_COL] == 1].copy().reset_index(drop=True)
-X_ai_scaled = StandardScaler().fit_transform(ai_df[FEATURES])
+# cap extreme values at the 1st/99th percentile so a few broken texts (e.g. 700-word "sentences") dont take over a cluster
+X_ai = ai_df[FEATURES].clip(ai_df[FEATURES].quantile(0.01), ai_df[FEATURES].quantile(0.99), axis=1)
+X_ai_scaled = StandardScaler().fit_transform(X_ai)
 
 # silhouette score for different k (higher = tighter, better separated clusters) to justify N_CLUSTERS
 print("\nSilhouette score by k:")
