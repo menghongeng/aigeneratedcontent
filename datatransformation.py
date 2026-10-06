@@ -131,33 +131,7 @@ combined = combined.reset_index(drop=True)
 print("\nRows kept after each step:")
 print(pd.DataFrame(steps).to_string(index=False))
 
-# -----------------
-# -----------------
-# Graphs created by AI, remove later and recreate our own if needed
-# -----------------
-# -----------------
-print("\nSource x label counts (0 = human, 1 = AI):")
-print(pd.crosstab(combined["source"], combined["is_ai_generated"]))
 
-sns.set_theme()
-
-# Class balance per source. If a source has ONE class only, the model can cheat by
-# learning the source's style instead of "AI vs human".
-fig, ax = plt.subplots(figsize=(8, 4))
-sns.countplot(data=combined, y="source", hue="is_ai_generated", ax=ax)
-ax.set_title("Samples per source and label (0 = human, 1 = AI)")
-plt.tight_layout()
-plt.savefig(f"{OUT_DIR}/class_balance_by_source.png", dpi=150)
-plt.close()
-
-# Length by label. A big gap means the model could just learn "long = human".
-fig, ax = plt.subplots(figsize=(8, 4))
-sns.histplot(data=combined, x="word_count", hue="is_ai_generated", log_scale=True,
-             bins=50, element="step", ax=ax)
-ax.set_title("Word count by label (log scale)")
-plt.tight_layout()
-plt.savefig(f"{OUT_DIR}/word_count_by_label.png", dpi=150)
-plt.close()
 
 print("\nMedian words by label:")
 print(combined.groupby("is_ai_generated")["word_count"].median())
@@ -173,34 +147,3 @@ train.to_csv(f"{OUT_DIR}/train.csv", index=False)
 test.to_csv(f"{OUT_DIR}/test.csv", index=False)
 print(f"\nTrain: {len(train)} rows | Test: {len(test)} rows")
 
-# ------------------
-# ------------------
-# Basic AI Model made by AI, remove later and replace with our own
-# ------------------
-# ------------------
-
-# TF-IDF turns each text into numbers (how important each word/word-pair is).
-# Logistic regression then learns which words push towards "AI" or "human".
-# It is fitted on TRAIN ONLY, then applied to TEST, so nothing leaks between them.
-vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=3, max_features=50000, sublinear_tf=True)
-X_train = vectorizer.fit_transform(train["text"])
-X_test = vectorizer.transform(test["text"])
-
-model = LogisticRegression(max_iter=1000, class_weight="balanced")  # balanced = fair to the smaller class
-model.fit(X_train, train["is_ai_generated"])
-pred = model.predict(X_test)
-
-print("\nBaseline results on the test set:")
-print(classification_report(test["is_ai_generated"], pred, target_names=["human (0)", "AI (1)"]))
-
-ConfusionMatrixDisplay.from_predictions(test["is_ai_generated"], pred,
-                                        display_labels=["human", "AI"])
-plt.title("Baseline confusion matrix")
-plt.tight_layout()
-plt.savefig(f"{OUT_DIR}/baseline_confusion_matrix.png", dpi=150)
-plt.close()
-
-# Accuracy per source: if one source is far better than the others, the model may be
-# recognising the source rather than AI-ness.
-print("Accuracy per source:")
-print((test["is_ai_generated"] == pred).groupby(test["source"]).mean().round(3))
