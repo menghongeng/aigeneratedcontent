@@ -208,8 +208,20 @@ save_plot("confusion_matrix_final.png")
 
 # accuracy per source: if one source is far better than the others, the model may be
 # recognising the source rather than AI-ness (same check as the baseline in data processing)
-print("Accuracy per source:")
+source_accuracy = (y_test == final_pred).groupby(test_df[SOURCE_COL]).mean().round(3)
 print((y_test == final_pred).groupby(test_df[SOURCE_COL]).mean().round(3))
+print("Accuracy per source:")
+print(source_accuracy)
+
+# source accuracy chart
+plt.figure(figsize=(9, 10))
+source_accuracy.sort_values().plot(kind="barh")
+plt.xlabel("Accuracy")
+plt.ylabel("Source")
+plt.title("Final Model Accuracy by Source")
+plt.xlim(0, 1)
+
+save_plot("source_accuracy.png")
 
 
 #----------------------------------------------------------------------------
