@@ -131,6 +131,10 @@ The feature datasets are also generated:
 datasets/train_features.csv
 datasets/test_features.csv
 
+ai_detector.joblib is then trained on the next code.
+Run:
+python model_evaluation.py
+
 VII. How to Evaluate the Model
 After running python model_selection.py in the terminal they will be comparisons of models
 The evaluation includes:
@@ -152,6 +156,7 @@ conda activate aidetect
 pip install -r requirements.txt
 python datatransformation.py
 python model_selection.py
+python model_evaluation.py
 
 The project workflow is:
 Raw datasets
@@ -163,3 +168,9 @@ train.csv + test.csv
 features.py
      ↓
 model_selection.py
+     ↓
+ai_detector.joblib
+     ↓
+model_evaluation.py
+     ↓
+evaluation_outputs
