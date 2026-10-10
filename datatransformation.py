@@ -3,13 +3,7 @@ import os
 import re
 import unicodedata
 from config import BASE_PATH, SECONDARY_PATH, COMPARISON_PATH, COMBINED_CLEAN_PATH, TRAIN_PATH, TEST_PATH
-
-import matplotlib.pyplot as plt
 import pandas as pd
-import seaborn as sns
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import ConfusionMatrixDisplay, classification_report
 from sklearn.model_selection import train_test_split
 # dont forget to pip install pandas matplotlib seaborn scikit-learn openpyxl
 
@@ -89,6 +83,11 @@ log_step("dropped missing text/label", combined)
 
 # clean dataset by fixing formatting issues (odd spaces, extra blank lines)
 def clean_text(t):
+    t = unicodedata.normalize("NFKC", str(t))            # unify odd unicode forms (ligatures, full-width chars)
+    t = re.sub(r"[\u200b\u200c\u200d\ufeff]", "", t)     # invisible zero-width characters
+    t = t.replace("\u00a0", " ")                         # non-breaking space -> normal space
+    t = t.replace("\r\n", "\n").replace("\r", "\n")      # unify line endings
+    t = t.translate(str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"'}))  # curly -> straight quotes
     t = re.sub(r"[ \t]+", " ", t)                        # runs of spaces/tabs -> one space
     t = re.sub(r" *\n *", "\n", t)                       # trailing/leading spaces around line breaks
     t = re.sub(r"\n{3,}", "\n\n", t)                     # 3+ blank lines -> one blank line
