@@ -38,7 +38,7 @@ N_CLUSTERS = 4                           # picked using the silhouette table pri
 def save_plot(name, dpi=150):
     """Saves the current figure into OUT_DIR and closes it."""
     plt.tight_layout()
-    plt.savefig(f"{DATA_DIR}/{name}", dpi=dpi, bbox_inches="tight")
+    plt.savefig({DATA_DIR}/{name}, dpi=dpi, bbox_inches="tight")
     plt.close()
 
 

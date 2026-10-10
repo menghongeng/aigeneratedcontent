@@ -125,7 +125,7 @@ print("\nMedian words by label:")
 print(combined.groupby("is_ai_generated")["word_count"].median())
 
 combined = combined[TARGET_COLUMNS]
-combined.to_csv(f"{COMBINED_CLEAN_PATH}", index=False)
+combined.to_csv({COMBINED_CLEAN_PATH}, index=False)
 
 # Partitioning data into training and testing sets. 80/20 split.
 strata = combined["source"] + "_" + combined["is_ai_generated"].astype(str)
