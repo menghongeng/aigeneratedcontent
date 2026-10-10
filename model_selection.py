@@ -1,5 +1,5 @@
 import os
-
+from config import TRAIN_PATH, TEST_PATH, DATA_DIR, MODEL_PATH
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,9 +27,6 @@ from features import build_feature_table
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 
-OUT_DIR = "C:/Users/U-ser/Downloads/aigeneratedcontent/datasets"
-TRAIN_PATH = f"{OUT_DIR}/train.csv"      # made by the data processing script (80% split)
-TEST_PATH = f"{OUT_DIR}/test.csv"        # made by the data processing script (20% split)
 TEXT_COL = "text"
 LABEL_COL = "is_ai_generated"            # 1 = AI, 0 = human (same as the data processing script)
 SOURCE_COL = "source"                    # only used to check results per source, never a model feature
@@ -37,13 +34,11 @@ RANDOM_STATE = 42                        # same as data processing so results ar
 PRECISION_TARGET = 0.90                  # we care most about NOT falsely accusing a human of using AI
 N_CLUSTERS = 4                           # picked using the silhouette table printed in the clustering section
 
-os.makedirs(OUT_DIR, exist_ok=True)
-
 
 def save_plot(name, dpi=150):
     """Saves the current figure into OUT_DIR and closes it."""
     plt.tight_layout()
-    plt.savefig(f"{OUT_DIR}/{name}", dpi=dpi, bbox_inches="tight")
+    plt.savefig(f"{DATA_DIR}/{name}", dpi=dpi, bbox_inches="tight")
     plt.close()
 
 
@@ -65,8 +60,8 @@ print(f"train {train_df[LABEL_COL].mean():.1%} AI | test {test_df[LABEL_COL].mea
 # raw text -> feature table (code lives in features.py so it can be reused for prediction later)
 train_df = build_feature_table(train_df, TEXT_COL)
 test_df = build_feature_table(test_df, TEXT_COL)
-train_df.to_csv(f"{OUT_DIR}/train_features.csv", index=False)
-test_df.to_csv(f"{OUT_DIR}/test_features.csv", index=False)
+train_df.to_csv(f"{DATA_DIR}/train_features.csv", index=False)
+test_df.to_csv(f"{DATA_DIR}/test_features.csv", index=False)
 
 # uses every column that starts with feature_ so new features get picked up automatically
 FEATURES = [c for c in train_df.columns if c.startswith("feature_")]
@@ -367,7 +362,6 @@ for c in sorted(ai_df["cluster"].unique()):
 # the whole Pipeline is saved so the scaler travels with the model (saving only the bare model means
 # redoing the exact scaling by hand later). the threshold and feature names are saved with it because
 # predict() on its own would use 0.5 and the column order has to match
-MODEL_PATH = f"{OUT_DIR}/ai_detector.joblib"
 joblib.dump({"pipeline": final_model, "threshold": threshold, "features": FEATURES}, MODEL_PATH)
 print(f"\nsaved {MODEL_PATH} ({os.path.getsize(MODEL_PATH) / 1024:.0f} KB)")
 # a model saved under one scikit-learn version may not load under another, so pin the version in the readme

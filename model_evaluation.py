@@ -3,7 +3,10 @@ import os
 import re
 import unicodedata
 from pathlib import Path
-
+from config import (
+    BASE_PATH, SECONDARY_PATH, COMPARISON_PATH, DATA_DIR,
+    TRAIN_PATH, TEST_PATH, MODEL_PATH,
+    EVALUATION_OUTPUT_DIR as OUTPUT_DIR,)
 import joblib
 import matplotlib.pyplot as plt
 import numpy as np
@@ -424,7 +427,6 @@ def train_hard_test_model(train_df, features):
 # -----------------------------------------------------------------------------
 
 def main():
-    print("Project folder:", PROJECT_DIR)
     print("Datasets folder:", DATA_DIR)
     print("Outputs folder:", OUTPUT_DIR)
 

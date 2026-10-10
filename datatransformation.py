@@ -2,6 +2,7 @@ import json
 import os
 import re
 import unicodedata
+from config import BASE_PATH, SECONDARY_PATH, COMPARISON_PATH, COMBINED_CLEAN_PATH, TRAIN_PATH, TEST_PATH
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -16,20 +17,13 @@ from sklearn.model_selection import train_test_split
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 # CONFIGURATION - edit file paths as needed - maybe use a local version so we dont keep pushing/pulling different paths to git
+# need to make config file for paths and other constants so that they can be easily changed without editing the code
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
-
-BASE_PATH = "C:/Users/arion/OneDrive - Swinburne University/Year 2 Sem 2/Tech Innovation/Assignment2/datasets/base_dataset.csv"
-DS2_PATH = "C:/Users/arion/OneDrive - Swinburne University/Year 2 Sem 2/Tech Innovation/Assignment2/datasets/secondary_dataset.xlsx"
-DS3_PATH = "C:/Users/arion/OneDrive - Swinburne University/Year 2 Sem 2/Tech Innovation/Assignment2/datasets/comparison_dataset.jsonl"
-OUT_DIR = "C:/Users/arion/OneDrive - Swinburne University/Year 2 Sem 2/Tech Innovation/Assignment2/datasets"
-DS3_SOURCE_NAME = "wiki_questions"     # renames sources in 3rd dataset to wiki_questions (the style of questions asked)
-MIN_WORDS = 20                     # texts shorter than this are dropped
-RANDOM_STATE = 42                  # makes the train/test split repeatable
-TARGET_COLUMNS = ["text", "is_ai_generated", "prompt_name", "source",]  # columns from base dataset that are kept
-
-
-os.makedirs(OUT_DIR, exist_ok=True)
+DS3_SOURCE_NAME = "wiki_questions"
+MIN_WORDS = 20
+RANDOM_STATE = 42
+TARGET_COLUMNS = ["text", "is_ai_generated", "prompt_name", "source"]
 steps = []  # a running log of rows kept after each step
 
 
@@ -49,8 +43,8 @@ def load_json_any(path):
 
 # defining the types of files for each dataset
 base = pd.read_csv(BASE_PATH)
-ds2 = pd.read_excel(DS2_PATH)
-ds3 = load_json_any(DS3_PATH)
+ds2 = pd.read_excel(SECONDARY_PATH)
+ds3 = load_json_any(COMPARISON_PATH)
 
 # prints the amount of rows and columns for each dataset and total of missing values for each column
 for name, d in [("base", base), ("dataset 2", ds2), ("dataset 3", ds3)]:
@@ -93,13 +87,8 @@ combined = combined.dropna(subset=["text", "is_ai_generated"])
 log_step("dropped missing text/label", combined)
 
 
-# clean dataset by fixing formatting issues (encodings, odd spaces, extra blank lines) but keeping punctuation and capitalisation for AI detection
+# clean dataset by fixing formatting issues (odd spaces, extra blank lines)
 def clean_text(t):
-    t = unicodedata.normalize("NFKC", str(t))            # unify odd unicode forms (ligatures, full-width chars)
-    t = re.sub(r"[\u200b\u200c\u200d\ufeff]", "", t)     # invisible zero-width characters
-    t = t.replace("\u00a0", " ")                         # non-breaking space -> normal space
-    t = t.replace("\r\n", "\n").replace("\r", "\n")      # unify line endings
-    t = t.translate(str.maketrans({"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"'}))  # curly -> straight quotes
     t = re.sub(r"[ \t]+", " ", t)                        # runs of spaces/tabs -> one space
     t = re.sub(r" *\n *", "\n", t)                       # trailing/leading spaces around line breaks
     t = re.sub(r"\n{3,}", "\n\n", t)                     # 3+ blank lines -> one blank line
@@ -137,13 +126,13 @@ print("\nMedian words by label:")
 print(combined.groupby("is_ai_generated")["word_count"].median())
 
 combined = combined[TARGET_COLUMNS]
-combined.to_csv(f"{OUT_DIR}/combined_clean.csv", index=False)
+combined.to_csv(f"{COMBINED_CLEAN_PATH}", index=False)
 
 # Partitioning data into training and testing sets. 80/20 split.
 strata = combined["source"] + "_" + combined["is_ai_generated"].astype(str)
 train, test = train_test_split(combined, test_size=0.2, stratify=strata,
                                random_state=RANDOM_STATE)
-train.to_csv(f"{OUT_DIR}/train.csv", index=False)
-test.to_csv(f"{OUT_DIR}/test.csv", index=False)
+train.to_csv(f"{TRAIN_PATH}", index=False)
+test.to_csv(f"{TEST_PATH}", index=False)
 print(f"\nTrain: {len(train)} rows | Test: {len(test)} rows")
 
