@@ -1,0 +1,16 @@
+MODEL EVALUATION SUMMARY
+============================================================
+Features: ['feature_text_length', 'feature_avg_sentence_len', 'feature_avg_word_len', 'feature_type_token_ratio', 'feature_sentence_length_std', 'feature_punctuation_density', 'feature_vocabulary_repetition']
+Standard evaluation model: saved_final_model
+Standard threshold: 0.59
+Held-out AI source: chat_gpt_moth
+Held-out prompt: no_prompt
+
+Metrics:
+                     evaluation     n  accuracy  precision  recall     f1  roc_auc  pr_auc
+            Standard 80/20 Test 11605    0.8691     0.9065  0.7638 0.8290   0.9484  0.9324
+Unseen AI Source: chat_gpt_moth  4842    0.7730     0.8825  0.6299 0.7351   0.9010  0.8924
+       Unseen Prompt: no_prompt 11555    0.6051     0.8423  0.2567 0.3935   0.7757  0.7665
+
+Manual error analysis:
+Open error_analysis.csv and inspect the selected false positives and false negatives. Look for repeated writing characteristics, source patterns, prompt/topic effects, text length, sentence structure, vocabulary variety, or other traits shared by the mistakes.
