@@ -1,0 +1,372 @@
+/* App.css
+   All the styling for the app is in this one file.
+   I use CSS variables (the --names) for the colours and spacing so the whole app stays consistent,
+   and changing one value here changes it everywhere. */
+
+:root {
+  --bg: #f8fafc; /* page background */
+  --card: #ffffff; /* card background */
+  --text: #1f2937; /* main text, strong contrast on both backgrounds */
+  --muted: #4b5563; /* secondary text, still passes the contrast check */
+  --border: #d1d5db;
+  --ai: #4338ca; /* indigo, the main accent colour and the "AI" colour */
+  --human: #0f766e; /* teal, the "human" colour */
+  --danger: #b91c1c; /* red, for errors */
+  --space: 1rem; /* the basic spacing unit used everywhere */
+  --radius: 10px;
+}
+
+/* One font for the whole app, so the typography is consistent */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 1.6rem;
+  margin: 0 0 0.5rem;
+}
+
+h2,
+h3 {
+  margin: 0;
+}
+
+p {
+  margin: 0 0 var(--space);
+}
+
+/* ----- Layout ----- */
+
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 var(--space);
+}
+
+main {
+  padding-top: calc(var(--space) * 1.5);
+  padding-bottom: calc(var(--space) * 3);
+}
+
+/* The page is a vertical stack, with the same gap between every block */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space);
+}
+
+.site-header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-title {
+  display: inline-block;
+  padding: 0.9rem 0;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ai);
+  text-decoration: none;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: calc(var(--space) * 1.25);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  margin-bottom: var(--space);
+}
+
+/* Two columns on a desktop, one column on a phone (see the media query at the bottom) */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space);
+  align-items: start;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* ----- Form ----- */
+
+.label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  font: inherit;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  resize: vertical;
+}
+
+textarea.input-error {
+  border-color: var(--danger);
+}
+
+.field-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space);
+  margin: 0.4rem 0 var(--space);
+  font-size: 0.9rem;
+}
+
+.counter {
+  color: var(--muted);
+  white-space: nowrap; /* keeps "116 / 5000" on one line on a phone */
+}
+
+.counter.over {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.field-error {
+  color: var(--danger);
+  font-weight: 600;
+  margin-bottom: var(--space);
+}
+
+.button {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--ai);
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover:not(:disabled) {
+  background: #3730a3;
+}
+
+.button:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+}
+
+/* A clear outline for keyboard users, shown on everything that can be focused */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+/* The skip link sits off-screen until it gets keyboard focus */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--ai);
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  z-index: 10;
+}
+
+.skip-link:focus {
+  left: 0;
+}
+
+/* ----- Result ----- */
+
+.verdict {
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.25rem;
+}
+
+.verdict.ai {
+  color: var(--ai);
+}
+
+.verdict.human {
+  color: var(--human);
+}
+
+.confidence {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.confidence-number {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.success-note {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--human);
+  border: 1px solid var(--human);
+  border-radius: 999px;
+}
+
+.error-box {
+  color: var(--danger);
+  border: 2px solid var(--danger);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+}
+
+.error-box p {
+  margin: 0.25rem 0 0;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid var(--border);
+  border-top-color: var(--ai);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Anyone who has asked their device to reduce motion gets no spinning animation */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+}
+
+/* ----- Charts ----- */
+
+/* Charts need a box with a fixed height to fill */
+.chart-box {
+  position: relative;
+  height: 280px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: var(--space);
+}
+
+.chip {
+  padding: 0.4rem 0.9rem;
+  font: inherit;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.chip.active {
+  color: #ffffff;
+  background: var(--ai);
+  border-color: var(--ai);
+}
+
+.check-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: var(--space) 0;
+}
+
+.check-button {
+  padding: 0.3rem 0.7rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.check-button.selected {
+  border: 2px solid var(--text);
+  font-weight: 700;
+}
+
+.details {
+  border-top: 1px solid var(--border);
+  padding-top: var(--space);
+}
+
+.details h3 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.excerpt {
+  font-style: italic;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ----- Error pages (404 and the crash fallback) ----- */
+
+.message-page {
+  text-align: center;
+  padding: calc(var(--space) * 3) var(--space);
+}
+
+/* ----- Phone layout ----- */
+
+/* This only applies when the screen is 720px wide or less, so it targets phones and small tablets */
+@media (max-width: 720px) {
+  .chart-grid {
+    grid-template-columns: 1fr; /* stack the charts in one column */
+  }
+
+  .verdict {
+    font-size: 1.9rem;
+  }
+
+  h1 {
+    font-size: 1.35rem;
+  }
+
+  .button {
+    width: 100%; /* full-width button is easier to tap */
+  }
+}
