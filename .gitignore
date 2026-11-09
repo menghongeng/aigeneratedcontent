@@ -1,0 +1,14 @@
+# Local Python virtual environments
+.venv/
+venv/
+__pycache__/
+
+# Generated project data and trained models
+# Keep these files on the local machine unless Git LFS is configured.
+datasets/
+*.joblib
+*.pkl
+*.npy
+*.h5
+*.pt
+*.bin

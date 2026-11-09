@@ -109,6 +109,13 @@ aigeneratedcontent/
 ├── config.py
 └── requirements.txt
 
+Important: generated files such as datasets/combined_clean.csv, train.csv, test.csv,
+and ai_detector.joblib are intentionally kept local and are ignored by Git to avoid
+GitHub's 100 MB file-size limit. If you want to version-control these large data/model
+artifacts, configure Git LFS before adding them:
+
+git lfs install
+git lfs track "*.csv" "*.xlsx" "*.jsonl" "*.joblib" "*.pkl" "*.npy" "*.h5" "*.pt" "*.bin"
 
 V. How to Process the Dataset
 Run:
