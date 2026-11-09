@@ -1,56 +1,62 @@
-# AI Text Checker - Front End
+# AI Text Checker
 
-React front end for the assignment. The user pastes in some text, the back end says whether it looks AI-generated or human-written, and the app shows the result with its confidence and two charts.
+This project has a front end and a back end. The front end is where you enter the text, and the back end uses the AI model to check it.
 
-## Running it on a clean machine
+## What you need
 
-You need [Node.js](https://nodejs.org/) 18 or newer (tested on Node 22).
+- Python 3.11
+- Node.js 18 or newer
+- Git LFS, to download the model file
 
-```bash
-cd frontend
-npm install     # installs the exact pinned versions from package-lock.json
-npm start       # opens http://localhost:3000
+## First, download the project files
+
+If you have not cloned the repository yet, install Git LFS and then clone it. After opening a terminal in the project folder, run:
+
+```powershell
+git lfs install
+git lfs pull
 ```
 
-By default the app uses a **mock back end** (fake answers after a 1 second delay), so it works without the real back end.
+This downloads the model file needed by the back end.
 
-### Connecting the real back end
+## Start the back end
 
-1. Copy `.env.example` to `.env`
-2. Set `REACT_APP_USE_MOCK=false` and `REACT_APP_API_URL=http://localhost:5000`
-3. In the repository root, install the Python dependencies with `pip install -r requirements.txt`
-4. Start the back end from `Assignment3/backend` with `python -m uvicorn main:app --reload --port 5000`
-5. Restart `npm start` (changes to `.env` are only read on start)
+Open a terminal in the main project folder and run:
 
-The front end sends `POST {REACT_APP_API_URL}/detect` with `{ "text": "..." }`. The back end replies with `{ "check_id": "...", "label": "ai" | "human", "ai_probability": 0.0 - 1.0 }`; `src/api.js` converts `ai_probability` into the verdict confidence shown by the UI. The back end loads `datasets/ai_detector.joblib` when it starts.
-
-## Trying the different states
-
-| What to do | What you see |
-| --- | --- |
-| Click "Check text" with the box empty, or with fewer than 50 characters | Validation message under the input |
-| Submit valid text | Loading state, then the result and both charts |
-| Include the words `simulate error` in the text (mock only) | Error state |
-| Visit `/anything-else` | 404 page |
-| Visit `/crash-test` | Fallback page for unexpected failures (remove this route before submitting) |
-
-## Project layout
-
+```powershell
+py -3.11 -m venv .venv311
+.\.venv311\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+cd Assignment3\backend
+python -m uvicorn main:app --reload --port 5000
 ```
-src/
-  index.js              starts the app
-  App.js                header and routes
-  api.js                the only file that talks to the back end (and the mock)
-  colors.js             chart colours
-  App.css               all styling
-  pages/
-    HomePage.js         holds the state, puts everything together
-    NotFoundPage.js     404 page
-    CrashTestPage.js    demo-only, throws an error on purpose
-  components/
-    TextForm.js         input form with validation messages
-    ResultCard.js       result, loading and error states
-    ConfidenceChart.js  chart 1: confidence split for the latest check
-    HistoryChart.js     chart 2: every check this session, with filter and click to select
-    ErrorBoundary.js    shows the fallback page if something crashes
+
+Leave this terminal open while you use the app.
+
+## Start the front end
+
+Open a second terminal in the `Assignment3\frontend` folder. Copy the example settings file and install the front end packages:
+
+```powershell
+Copy-Item .env.example .env
+npm install
 ```
+
+Open the new `.env` file and change the settings to:
+
+```text
+REACT_APP_USE_MOCK=false
+REACT_APP_API_URL=http://localhost:5000
+```
+
+Then start the front end:
+
+```powershell
+npm start
+```
+
+The app should open at [http://localhost:3000](http://localhost:3000). Keep both terminals open while you use it. If port 3000 is already in use, stop the other app using it and try again.
+
+## Close the app
+
+When you are finished, press `Ctrl+C` in each terminal to stop the front end and back end. You can then close both terminals.
