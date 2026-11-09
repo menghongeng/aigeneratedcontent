@@ -1,5 +1,6 @@
 # Local Python virtual environments
 .venv/
+.venv311/
 venv/
 __pycache__/
 

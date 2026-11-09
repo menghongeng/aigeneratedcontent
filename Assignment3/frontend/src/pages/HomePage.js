@@ -21,7 +21,7 @@ const MAX_LENGTH = 5000;
 
 // Checks the text and returns a message explaining the problem, or '' (empty) if the text is fine.
 // This runs BEFORE anything is sent to the back end.
-function validate(text) {w
+function validate(text) {
   const trimmed = text.trim();
   if (trimmed.length === 0) {
     return 'Please enter some text to check.';

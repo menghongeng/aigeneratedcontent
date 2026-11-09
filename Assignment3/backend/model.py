@@ -2,9 +2,7 @@ import hashlib
 
 import joblib
 
-# Run the following command to get hash
-# python -c "import hashlib;print(hashlib.sha256(open('ai_detector.joblib','rb').read()).hexdigest())"
-EXPECTED_HASH = "PASTE_YOUR_HASH_HERE"
+EXPECTED_HASH = "024d532a2d36d3ae4a9f608a5c49c96d9a714aa2f650e928092f6776ffea46f3"
 
 
 def _verify_hash(path):

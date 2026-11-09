@@ -20,10 +20,11 @@ export async function checkText(text) {
 
   try {
     // axios.post sends the text to the back end as JSON and waits for the reply
-    const response = await axios.post(`${API_URL}/predict`, { text: text });
+    const response = await axios.post(`${API_URL}/detect`, { text: text });
+    const { label, ai_probability: aiProbability } = response.data;
     return {
-      label: response.data.label,
-      confidence: response.data.confidence,
+      label,
+      confidence: label === 'ai' ? aiProbability : 1 - aiProbability,
     };
   } catch (error) {
     // error.response exists when the server replied with an error code (like 500).

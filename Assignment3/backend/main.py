@@ -1,6 +1,7 @@
 import asyncio
 import uuid
 from collections import OrderedDict
+from pathlib import Path
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Request
@@ -19,7 +20,7 @@ from schemas import DetectRequest, DetectResponse, ErrorResponse
 from utils import logger
 
 FRONTEND_ORIGIN = "http://localhost:3000"   # exact frontend origin, never "*"
-MODEL_PATH = "ai_detector.joblib"
+MODEL_PATH = Path(__file__).resolve().parents[2] / "datasets" / "ai_detector.joblib"
 INFERENCE_TIMEOUT_SECONDS = 5               # DoS defence: no single request may hog the server
 MAX_HISTORY = 1000                          # DoS defence: memory use of the history store is capped
 

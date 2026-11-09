@@ -86,10 +86,24 @@ Enter:
 python --version
 The project uses Python 3.11.
 
+If Conda is not installed, create a Windows virtual environment from the project root:
+
+```powershell
+py -3.11 -m venv .venv311
+.\.venv311\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+In VS Code, select `.venv311\Scripts\python.exe` as the Python interpreter. In a new terminal, activate it again with:
+
+```powershell
+.\.venv311\Scripts\Activate.ps1
+```
+
 IV. How to Setup the Project in VS Code
 1. Open the VS Code we just installed.
 2. Open the aigeneratedcontent project folder.
-3. Select the aidetect Conda environment as the Python interpreter.
+3. Select the `aidetect` Conda environment or `.venv311\Scripts\python.exe` as the Python interpreter.
 4. Open the VS Code terminal.
 Make sure the following dataset files are inside the datasets folder:
 base_dataset.csv
@@ -160,8 +174,8 @@ The evaluation includes:
 - Unseen prompt/topic test
 
 VIII. Complete Command Sequence
-After Python, VS Code, and the Conda environment have been set up, run:
-conda activate aidetect
+After Python, VS Code, and a Python environment have been set up, activate it from the project root. For the virtual environment above:
+.\.venv311\Scripts\Activate.ps1
 pip install -r requirements.txt
 python datatransformation.py
 python model_selection.py

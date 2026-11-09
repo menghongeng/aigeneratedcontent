@@ -17,10 +17,12 @@ By default the app uses a **mock back end** (fake answers after a 1 second delay
 ### Connecting the real back end
 
 1. Copy `.env.example` to `.env`
-2. Set `REACT_APP_USE_MOCK=false` and `REACT_APP_API_URL` to the back end's address
-3. Restart `npm start` (changes to `.env` are only read on start)
+2. Set `REACT_APP_USE_MOCK=false` and `REACT_APP_API_URL=http://localhost:5000`
+3. In the repository root, install the Python dependencies with `pip install -r requirements.txt`
+4. Start the back end from `Assignment3/backend` with `python -m uvicorn main:app --reload --port 5000`
+5. Restart `npm start` (changes to `.env` are only read on start)
 
-The front end expects `POST {REACT_APP_API_URL}/predict` with a body of `{ "text": "..." }`, replying with `{ "label": "ai" | "human", "confidence": 0.0 - 1.0 }`. If the real back end differs, only `src/api.js` needs to change.
+The front end sends `POST {REACT_APP_API_URL}/detect` with `{ "text": "..." }`. The back end replies with `{ "check_id": "...", "label": "ai" | "human", "ai_probability": 0.0 - 1.0 }`; `src/api.js` converts `ai_probability` into the verdict confidence shown by the UI. The back end loads `datasets/ai_detector.joblib` when it starts.
 
 ## Trying the different states
 
