@@ -9,7 +9,7 @@
   --text: #1f2937; /* main text, strong contrast on both backgrounds */
   --muted: #4b5563; /* secondary text, still passes the contrast check */
   --border: #d1d5db;
-  --ai: #4338ca; /* indigo, the main accent colour and the "AI" colour */
+  --ai: #d86d43; /* orange, the main accent colour and the "AI" colour */
   --human: #0f766e; /* teal, the "human" colour */
   --danger: #b91c1c; /* red, for errors */
   --space: 1rem; /* the basic spacing unit used everywhere */
@@ -134,7 +134,7 @@ textarea.input-error {
 
 .counter {
   color: var(--muted);
-  white-space: nowrap; /* keeps "116 / 5000" on one line on a phone */
+  white-space: nowrap;
 }
 
 .counter.over {

@@ -21,9 +21,10 @@ This downloads the model file needed by the back end.
 
 ## Start the back end
 
-Open a terminal in the main project folder and run:
+Open a terminal in the main project folder (Assignment3) and run:
 
-```powershell
+```
+powershell
 py -3.11 -m venv .venv311
 .\.venv311\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
