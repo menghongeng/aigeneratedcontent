@@ -28,7 +28,7 @@ powershell
 py -3.11 -m venv .venv311
 .\.venv311\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-cd Assignment3\backend
+cd backend
 python -m uvicorn main:app --reload --port 5000
 ```
 
