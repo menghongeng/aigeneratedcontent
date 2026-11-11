@@ -49,6 +49,8 @@ function TextForm({ text, onTextChange, onSubmit, errorMessage, isLoading, maxLe
       <button type="submit" className="button" disabled={isLoading}>
         {isLoading ? 'Checking...' : 'Check text'}
       </button>
+      
+      <p> <br></br>Note: This model performs better with large texts.</p>
     </form>
   );
 }

@@ -17,7 +17,7 @@ import HistoryChart from '../components/HistoryChart';
 
 // Validation Limits
 const MIN_LENGTH = 50;
-const MAX_LENGTH = 5000;
+const MAX_LENGTH = 10000;
 
 // Checks the text and returns a message explaining the problem, or '' (empty) if the text is fine.
 // This runs BEFORE anything is sent to the back end.
