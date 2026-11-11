@@ -34,7 +34,7 @@ function HistoryChart({ history, selectedId, onSelect }) {
   // The check the user picked, used for the details box. find() returns the first match, or undefined.
   const selected = history.find((check) => check.id === selectedId);
 
-  // I use TWO datasets (one for AI, one for human) so Chart.js draws a legend with both colours.
+  // There is 2 datasets (one for AI, one for human) so Chart.js draws a legend with both colours.
   // For each check, only the matching dataset gets a value, the other gets null (no bar).
   function makeDataset(name, color, labelKey) {
     return {

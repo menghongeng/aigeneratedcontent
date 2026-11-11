@@ -107,7 +107,7 @@ function HomePage() {
         maxLength={MAX_LENGTH}
       />
 
-      {/* The result goes straight under the form and is the biggest text, so it's what the eye lands on */}
+      {/* The result goes straight under the form and is the biggest text so it gets seen first */}
       <ResultCard status={status} result={result} errorMessage={errorMessage} />
 
       <div className="chart-grid">

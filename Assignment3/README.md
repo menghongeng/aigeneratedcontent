@@ -43,13 +43,6 @@ Copy-Item .env.example .env
 npm install
 ```
 
-Open the new `.env` file and change the settings to:
-
-```text
-REACT_APP_USE_MOCK=false
-REACT_APP_API_URL=http://localhost:5000
-```
-
 Then start the front end:
 
 ```powershell

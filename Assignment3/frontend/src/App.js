@@ -6,7 +6,6 @@ import { Routes, Route, Link } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
-import CrashTestPage from './pages/CrashTestPage';
 
 function App() {
   return (
@@ -29,8 +28,6 @@ function App() {
         <ErrorBoundary>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            {/* Only for the demo video: visit /crash-test to see the fallback page. Delete before submitting. */}
-            <Route path="/crash-test" element={<CrashTestPage />} />
             {/* The "*" path matches any address that isn't listed above, so it is our 404 page */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
